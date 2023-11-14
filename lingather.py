@@ -58,6 +58,27 @@ def processes(): return subprocess.run(["ps aux"], shell=True, capture_output=Tr
 def environment(): return subprocess.run(["env"], shell=True, capture_output=True)
 
 
+def suid(): return subprocess.run(["find / -perm /4000 2>/dev/null"], shell=True, capture_output=True)
+
+
+def sgid(): return subprocess.run(["find / -perm /2000 2>/dev/null"], shell=True, capture_output=True)
+
+
+def last_logged_on_users(): return subprocess.run(["last"], shell=True, capture_output=True)
+
+
+def current_logged_on_users(): return subprocess.run(["users"], shell=True, capture_output=True)
+
+
+def user_terminal_history():
+    path = pathlib.Path("/home/")
+    all_users = path.glob('*/')
+    for home_dir in all_users:
+        all_files = home_dir.glob(".*_history")
+        for file in all_files:
+            print_config(f"USER ({home_dir}) TERMINAL HISTORY", str(file))
+
+
 print(f"""CURRENT SYSTEM INFORMATION
 Distribution: {distribution().stdout.decode().strip()}
 {uname().sysname} {uname().nodename} {uname().release} {uname().version} {uname().machine}
@@ -66,6 +87,20 @@ Distribution: {distribution().stdout.decode().strip()}
 print(f"""CURRENT USER INFORMATION
 Username: {whoami()}
 Groups: {user_groups().gr_name} ({os.getgid()})
+
+LAST LOGGED ON USERS
+{last_logged_on_users().stdout.decode().strip()}
+
+CURRENT USERS
+{current_logged_on_users().stdout.decode().strip()}
+
+SUID PERMISSIONS
+{suid().stdout.decode().strip()}
+
+SGID PERMISSIONS
+{sgid().stdout.decode().strip()}
+
+{user_terminal_history()}
 """)
 
 print(f"""NETWORK INFORMATION
@@ -88,12 +123,13 @@ print(f"""ENVIRONMENT
 {environment().stdout.decode().strip()}
 """)
 
-# APACHE CONFIGURATION
+
+print_config("ZSH HISTORY", "/home/")
 print_config("APACHE2 CONFIGURATION", "/etc/apache2/apache2.conf")
 print_config("APACHE2 PORTS CONFIGURATION", "/etc/apache2/ports.conf")
 print_config("NGINX CONFIGURATION", "/etc/nginx/nginx.conf")
 print_config("SNORT CONFIGURATION", "/etc/snort/snort.conf")
-print_config("MYSQL CONFIGURATION", "/etc/mysql/my.cnf")
+print_config("MYSQL CONFIGURATION", "/etc/mysql/my.conf")
 print_config("UFW CONFIGURATION", "/etc/ufw/ufw.conf")
 print_config("UFW (SYSCTL) CONFIGURATION", "/etc/ufw/sysctl.conf")
 print_config("SECURITY ACCESS CONFIGURATION", "/etc/security.access.conf")
@@ -104,7 +140,7 @@ print_config("ACCESS CONFIGURATION", "/etc/security/access.conf")
 print_config("GATED CONFIGURATION", "/etc/gated.conf")
 print_config("RPC", "/etc/rpc")
 print_config("PSAD", "/etc/psad/psad.conf")
-print_config("MYSQL (DEBIAN) CONFIGURATION", "/etc/mysql/debian.cnf")
+print_config("MYSQL (DEBIAN) CONFIGURATION", "/etc/mysql/debian.conf")
 print_config("CHKROOTKIT CONFIGURATION", "/etc/chkrootkit.conf")
 print_config("LOGROTATE CONFIGURATION", "/etc/logrotate.conf")
 print_config("RKHUNTER CONFIGURATION", "/etc/rkhunter.conf")
