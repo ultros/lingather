@@ -10,13 +10,17 @@ def print_config(name: str, path: str) -> None:
     filename = pathlib.Path(path).name
     if not pathlib.Path.exists(pathname):
         print(f"{name} - {pathname}")
-        print(f"{path} not found.")
+        print(f"{pathname} not found.\n")
     else:
-        with open(path, 'r') as config:
-            print(f"{name} - ({pathname})")
-            for line in config:
-                print(f"{filename}>>> {line.strip()}")
-            print('\n')
+        try:
+            with open(pathname, 'r') as config:
+                print(f"{name} - ({pathname})")
+                for line in config:
+                    print(f"{filename}>>> {line.strip()}")
+                print('\n')
+        except PermissionError as e:
+            print(f"{name} - {pathname}")
+            print(e, '\n')
 
 
 def distribution(): return subprocess.run(["cat /etc/*issue"], shell=True, capture_output=True)
@@ -89,3 +93,28 @@ print_config("APACHE2 CONFIGURATION", "/etc/apache2/apache2.conf")
 print_config("APACHE2 PORTS CONFIGURATION", "/etc/apache2/ports.conf")
 print_config("NGINX CONFIGURATION", "/etc/nginx/nginx.conf")
 print_config("SNORT CONFIGURATION", "/etc/snort/snort.conf")
+print_config("MYSQL CONFIGURATION", "/etc/mysql/my.cnf")
+print_config("UFW CONFIGURATION", "/etc/ufw/ufw.conf")
+print_config("UFW (SYSCTL) CONFIGURATION", "/etc/ufw/sysctl.conf")
+print_config("SECURITY ACCESS CONFIGURATION", "/etc/security.access.conf")
+print_config("SHELLS", "/etc/shells")
+print_config("PAM_SEPERMIT (SELINUX)", "/etc/security/sepermit.conf")
+print_config("CA CERTIFICATES CONFIGURATION", "/etc/ca-certificates.conf")
+print_config("ACCESS CONFIGURATION", "/etc/security/access.conf")
+print_config("GATED CONFIGURATION", "/etc/gated.conf")
+print_config("RPC", "/etc/rpc")
+print_config("PSAD", "/etc/psad/psad.conf")
+print_config("MYSQL (DEBIAN) CONFIGURATION", "/etc/mysql/debian.cnf")
+print_config("CHKROOTKIT CONFIGURATION", "/etc/chkrootkit.conf")
+print_config("LOGROTATE CONFIGURATION", "/etc/logrotate.conf")
+print_config("RKHUNTER CONFIGURATION", "/etc/rkhunter.conf")
+print_config("SAMBA CONFIGURATION", "/etc/samba/smb.conf")
+print_config("LDAP CONFIGURATION", "/etc/ldap/ldap.conf")
+print_config("OPENLDAP CONFIGURATION", "/etc/openldap/openldap.conf")
+print_config("CUPS CONFIGURATION", "/etc/cups/cups.conf")
+print_config("XAMP HTTPD CONFIGURATION", "/etc/opt/lampp/etc/httpd.conf")
+print_config("SYSCTL CONFIGURATION", "/etc/sysctl.conf")
+print_config("PROXYCHAINS CONFIGURATION", "/etc/proxychains4.conf")
+print_config("CUPS SNMP CONFIGURATION", "/etc/cups/snmp.conf")
+print_config("SENDMAIL CONFIGURATION", "/etc/mail/sendmail.conf")
+print_config("SNMP CONFIGURATION", "/etc/snmp/snmp.conf")
